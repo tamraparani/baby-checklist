@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Baby Essentials Checklist — Help Us Validate</title>
+<style>
+  :root {
+    --bg: #fdf8f3;
+    --card: #ffffff;
+    --ink: #2d2a26;
+    --muted: #6f6960;
+    --accent: #d4806a;
+    --accent-soft: #f7dfd4;
+    --border: #ece4da;
+    --essential: #c25450;
+    --nice: #b88c4a;
+    --skip: #8a8378;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.5;
+    padding: 0 0 120px 0;
+  }
+  header {
+    background: linear-gradient(135deg, #f7dfd4 0%, #fce8d8 100%);
+    padding: 28px 20px 24px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+  header h1 {
+    margin: 0 0 8px 0;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+  header p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .intro {
+    background: var(--card);
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    color: var(--ink);
+  }
+  .intro strong { color: var(--accent); }
+  .legend {
+    display: flex;
+    gap: 8px;
+    padding: 14px 20px;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--muted);
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .legend .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .dot.essential { background: var(--essential); }
+  .dot.nice { background: var(--nice); }
+  .dot.skip { background: var(--skip); }
+  section {
+    margin: 16px 12px;
+    background: var(--card);
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  h2 {
+    margin: 0;
+    padding: 16px 18px 12px;
+    font-size: 16px;
+    font-weight: 700;
+    background: var(--accent-soft);
+    color: var(--ink);
+    border-bottom: 1px solid var(--border);
+  }
+  .item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid #f4eee5;
+    gap: 10px;
+  }
+  .item:last-child { border-bottom: none; }
+  .item-label {
+    flex: 1;
+    font-size: 14px;
+    line-height: 1.35;
+  }
+  .vote {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+  .vote button {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    background: white;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    padding: 0;
+    color: var(--muted);
+  }
+  .vote button:hover { border-color: var(--accent); }
+  .vote button.active.essential {
+    background: var(--essential);
+    border-color: var(--essential);
+    color: white;
+  }
+  .vote button.active.nice {
+    background: var(--nice);
+    border-color: var(--nice);
+    color: white;
+  }
+  .vote button.active.skip {
+    background: var(--skip);
+    border-color: var(--skip);
+    color: white;
+  }
+  .add-row {
+    padding: 14px 16px;
+    background: #faf5ee;
+  }
+  .add-row input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: white;
+    font-size: 13px;
+    font-family: inherit;
+  }
+  .add-row input:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+  .missing-block {
+    background: var(--card);
+    margin: 16px 12px;
+    padding: 18px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+  }
+  .missing-block h3 {
+    margin: 0 0 6px 0;
+    font-size: 15px;
+  }
+  .missing-block p {
+    margin: 0 0 12px 0;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .missing-block textarea {
+    width: 100%;
+    min-height: 90px;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: white;
+    font-size: 14px;
+    font-family: inherit;
+    resize: vertical;
+  }
+  .name-row {
+    background: var(--card);
+    margin: 16px 12px;
+    padding: 18px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+  }
+  .name-row label {
+    display: block;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .name-row input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: white;
+    font-size: 14px;
+  }
+  .footer-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--card);
+    border-top: 1px solid var(--border);
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+    display: flex;
+    gap: 8px;
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.04);
+    z-index: 10;
+  }
+  .footer-bar button {
+    flex: 1;
+    padding: 14px 12px;
+    border-radius: 12px;
+    border: none;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .btn-primary {
+    background: #25D366;
+    color: white;
+  }
+  .btn-secondary {
+    background: var(--accent-soft);
+    color: var(--ink);
+    flex: 0 0 auto !important;
+    padding: 14px 16px !important;
+  }
+  .summary-bar {
+    background: var(--accent-soft);
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--ink);
+    font-weight: 500;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    border-bottom: 1px solid var(--border);
+  }
+  .summary-bar strong { color: var(--accent); }
+  .thank-you {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .thank-you.show { display: flex; }
+  .thank-you-card {
+    background: white;
+    padding: 28px 24px;
+    border-radius: 16px;
+    max-width: 320px;
+    text-align: center;
+  }
+  .thank-you-card h3 { margin-top: 0; }
+  .thank-you-card button {
+    margin-top: 16px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    background: var(--accent);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Help us build the perfect baby box</h1>
+  <p>A starter kit of everything 0–1 year olds really need</p>
+</header>
+
+<div class="intro">
+  Hi mums! <strong>👋</strong> Based on what we've all been buying & selling in this group, I've put together a checklist of things parents need in the first year. Could you take 2 mins to validate it? Mark each item as essential, nice-to-have, or skip — and add anything I missed at the bottom. Thank you! 💛
+</div>
+
+<div class="legend">
+  <span><span class="dot essential"></span> Must-have</span>
+  <span><span class="dot nice"></span> Nice-to-have</span>
+  <span><span class="dot skip"></span> Don't need</span>
+</div>
+
+<div class="summary-bar" id="summary">Tap the circles next to each item · <strong><span id="voted">0</span></strong> rated</div>
+
+<div id="checklist"></div>
+
+<div class="missing-block">
+  <h3>What did I miss? 🙏</h3>
+  <p>Anything important that's not on the list — please add it here. Brands you swear by also welcome.</p>
+  <textarea id="missing" placeholder="e.g., White noise machine, specific brand of swaddle, postpartum padsicles..."></textarea>
+</div>
+
+<div class="name-row">
+  <label for="name">Your name (optional)</label>
+  <input type="text" id="name" placeholder="So I know who to thank!" />
+</div>
+
+<div class="footer-bar">
+  <button class="btn-secondary" onclick="copyToClipboard()">📋</button>
+  <button class="btn-primary" onclick="shareWhatsApp()">Send via WhatsApp</button>
+</div>
+
+<div class="thank-you" id="thanks">
+  <div class="thank-you-card">
+    <h3>Copied! ✨</h3>
+    <p>Your feedback is on your clipboard. Paste it into the group chat or DM it back to me. Thank you so much!</p>
+    <button onclick="document.getElementById('thanks').classList.remove('show')">Got it</button>
+  </div>
+</div>
+
+<script>
+const CHECKLIST = {
+  "😴 Sleep": [
+    "Crib / cot",
+    "Crib mattress (70×140)",
+    "Fitted crib sheets",
+    "Sleeping bag / sleep sack (TOG 1 + 2.5)",
+    "Swaddles",
+    "Travel cot / play pen",
+    "Bed rail",
+    "Baby monitor",
+    "Blackout blinds",
+    "White noise machine"
+  ],
+  "🍼 Feeding — Breast & Bottle": [
+    "Breast pump (manual or electric)",
+    "Milk collectors (Haakaa / Medela)",
+    "Nipple shields",
+    "Nursing pads (Stilleinlagen)",
+    "Milk storage bags",
+    "Nipple cream",
+    "Nursing pillow",
+    "Bottles (4–6)",
+    "Bottle warmer",
+    "Steriliser",
+    "Bottle brush",
+    "Burp cloths / muslins",
+    "Bibs"
+  ],
+  "🥄 Feeding — Solids (6m+)": [
+    "High chair",
+    "Suction bowls & plates",
+    "Soft-tip spoons",
+    "Sippy / training cup",
+    "Silicone bib with catcher",
+    "Food warmer (Brei-Wärmer)",
+    "Food storage / freezer trays"
+  ],
+  "🛁 Bath & Hygiene": [
+    "Baby bath tub with newborn insert",
+    "Bath seat (Angelcare type)",
+    "Hooded towels",
+    "Washcloths",
+    "Baby wash / shampoo",
+    "Baby lotion / oil",
+    "Soft hairbrush",
+    "Nail clippers / file",
+    "Bath + body thermometer",
+    "Toilet training seat (later)"
+  ],
+  "👶 Diapering": [
+    "Changing table (Wickelkommode)",
+    "Changing mat + cover",
+    "Diapers (newborn → size 4)",
+    "Wipes",
+    "Diaper rash cream",
+    "Diaper bin (Angelcare type)",
+    "Travel changing pouch",
+    "Wet bags"
+  ],
+  "👕 Clothing": [
+    "Newborn bundle (sizes 50–62)",
+    "Clothes 3–6m (62/68)",
+    "Clothes 6–9m (74)",
+    "Clothes 9–12m (80)",
+    "Caps / hats (organic cotton, wool)",
+    "First soft shoes (17–20)",
+    "First walking shoes (21–23)",
+    "Rain suit / waterproof jumpsuit",
+    "Winter overall / snowsuit",
+    "Swimsuit + cap + swim ring"
+  ],
+  "🚼 Travel & Mobility": [
+    "Stroller / pram",
+    "Carrycot attachment (Tragewanne)",
+    "Travel buggy (plane-friendly)",
+    "Rain cover + mosquito net + footmuff",
+    "Stroller bottle/cup holder",
+    "Stroller carry bag",
+    "Car seat (newborn + infant)",
+    "Baby carrier (Ergobaby / hip seat)",
+    "Diaper bag"
+  ],
+  "🧸 Play & Development": [
+    "Play mat with arch + hanging toys",
+    "Play gym",
+    "Sensory / cloth book",
+    "Activity cube / tree",
+    "Ball pit",
+    "Baby bouncer",
+    "Baby swing / electric rocker",
+    "Musical toys (xylophone etc.)",
+    "Stacking blocks",
+    "Bath toys",
+    "Teethers",
+    "Board books",
+    "Montessori starter set (10m+)",
+    "Learning tower (12m+)",
+    "Push-along / Bobby car",
+    "Balance bike / Laufrad (12m+)"
+  ],
+  "🛡️ Safety & Babyproofing": [
+    "Outlet covers",
+    "Corner / edge foam protectors",
+    "Cabinet locks",
+    "Baby gates",
+    "Window restrictors",
+    "Anti-tip furniture straps",
+    "First aid kit",
+    "Nasal aspirator",
+    "Shopping cart protector"
+  ],
+  "💖 Mom Care": [
+    "Pregnancy / side-sleeper pillow",
+    "Maternity jacket with newborn insert",
+    "Nursing bras",
+    "Postpartum recovery kit",
+    "Tummy belt / belly band",
+    "Postnatal yoga / recovery program"
+  ]
+};
+
+const state = {};
+const container = document.getElementById('checklist');
+
+Object.entries(CHECKLIST).forEach(([section, items], sIdx) => {
+  const sec = document.createElement('section');
+  const h2 = document.createElement('h2');
+  h2.textContent = section;
+  sec.appendChild(h2);
+  items.forEach((item, iIdx) => {
+    const key = `${sIdx}-${iIdx}`;
+    const row = document.createElement('div');
+    row.className = 'item';
+    row.innerHTML = `
+      <span class="item-label">${item}</span>
+      <div class="vote" data-key="${key}">
+        <button class="essential" data-vote="essential" title="Must-have">★</button>
+        <button class="nice" data-vote="nice" title="Nice to have">○</button>
+        <button class="skip" data-vote="skip" title="Don't need">✕</button>
+      </div>
+    `;
+    sec.appendChild(row);
+    state[key] = { item, section, vote: null };
+  });
+  container.appendChild(sec);
+});
+
+container.addEventListener('click', (e) => {
+  const btn = e.target.closest('button[data-vote]');
+  if (!btn) return;
+  const voteGroup = btn.closest('.vote');
+  const key = voteGroup.dataset.key;
+  const vote = btn.dataset.vote;
+  if (state[key].vote === vote) {
+    state[key].vote = null;
+    voteGroup.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+  } else {
+    state[key].vote = vote;
+    voteGroup.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  updateSummary();
+});
+
+function updateSummary() {
+  const voted = Object.values(state).filter(s => s.vote).length;
+  document.getElementById('voted').textContent = voted;
+}
+
+function buildSummary() {
+  const name = document.getElementById('name').value.trim();
+  const missing = document.getElementById('missing').value.trim();
+  const essentials = [];
+  const nice = [];
+  const skips = [];
+  Object.values(state).forEach(s => {
+    if (s.vote === 'essential') essentials.push(s.item);
+    else if (s.vote === 'nice') nice.push(s.item);
+    else if (s.vote === 'skip') skips.push(s.item);
+  });
+  let out = '*Baby checklist feedback*';
+  if (name) out += ` from ${name}`;
+  out += '\n\n';
+  if (essentials.length) out += `⭐ *Must-haves (${essentials.length}):*\n${essentials.map(i => '• ' + i).join('\n')}\n\n`;
+  if (nice.length) out += `🌸 *Nice-to-haves (${nice.length}):*\n${nice.map(i => '• ' + i).join('\n')}\n\n`;
+  if (skips.length) out += `🚫 *Skip (${skips.length}):*\n${skips.map(i => '• ' + i).join('\n')}\n\n`;
+  if (missing) out += `➕ *Missing from list:*\n${missing}\n`;
+  if (!essentials.length && !nice.length && !skips.length && !missing) {
+    out += '_(no items rated yet)_';
+  }
+  return out;
+}
+
+function shareWhatsApp() {
+  const text = buildSummary();
+  const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+  window.open(url, '_blank');
+}
+
+function copyToClipboard() {
+  const text = buildSummary();
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => {
+      document.getElementById('thanks').classList.add('show');
+    });
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    document.getElementById('thanks').classList.add('show');
+  }
+}
+</script>
+
+</body>
+</html>
