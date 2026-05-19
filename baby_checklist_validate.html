@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Baby Essentials Checklist — Help Us Validate</title>
+<title>Baby Essentials Checklist — Help Me Validate</title>
 <style>
   :root {
     --bg: #fdf8f3;
@@ -13,9 +13,8 @@
     --accent: #d4806a;
     --accent-soft: #f7dfd4;
     --border: #ece4da;
-    --essential: #c25450;
-    --nice: #b88c4a;
-    --skip: #8a8378;
+    --on: #2e8a5a;
+    --on-soft: #dff0e6;
   }
   * { box-sizing: border-box; }
   body {
@@ -51,31 +50,67 @@
     color: var(--ink);
   }
   .intro strong { color: var(--accent); }
-  .legend {
+
+  .question-block {
+    background: var(--card);
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .question-block h3 {
+    margin: 0 0 4px 0;
+    font-size: 15px;
+  }
+  .question-block p {
+    margin: 0 0 12px 0;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .season-chips {
     display: flex;
     gap: 8px;
-    padding: 14px 20px;
-    background: var(--card);
-    border-bottom: 1px solid var(--border);
-    font-size: 11px;
-    color: var(--muted);
     flex-wrap: wrap;
-    justify-content: center;
   }
-  .legend span {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
+  .season-chip {
+    flex: 1;
+    min-width: 70px;
+    padding: 12px 8px;
+    border-radius: 10px;
+    border: 1.5px solid var(--border);
+    background: white;
+    font-size: 13px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s;
+    font-family: inherit;
+    line-height: 1.3;
   }
-  .legend .dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    display: inline-block;
+  .season-chip small {
+    display: block;
+    font-size: 10px;
+    opacity: 0.7;
+    margin-top: 2px;
   }
-  .dot.essential { background: var(--essential); }
-  .dot.nice { background: var(--nice); }
-  .dot.skip { background: var(--skip); }
+  .season-chip:hover { border-color: var(--accent); }
+  .season-chip.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+
+  .summary-bar {
+    background: var(--accent-soft);
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--ink);
+    font-weight: 500;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    border-bottom: 1px solid var(--border);
+  }
+  .summary-bar strong { color: var(--accent); }
+
   section {
     margin: 16px 12px;
     background: var(--card);
@@ -85,7 +120,7 @@
   }
   h2 {
     margin: 0;
-    padding: 16px 18px 12px;
+    padding: 14px 18px 12px;
     font-size: 16px;
     font-weight: 700;
     background: var(--accent-soft);
@@ -96,88 +131,73 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 12px 16px;
+    padding: 12px 14px;
     border-bottom: 1px solid #f4eee5;
     gap: 10px;
+    cursor: pointer;
+    user-select: none;
   }
   .item:last-child { border-bottom: none; }
+  .item:hover { background: #fbf7f1; }
+  .item.active { background: var(--on-soft); }
   .item-label {
     flex: 1;
     font-size: 14px;
     line-height: 1.35;
   }
-  .vote {
-    display: flex;
-    gap: 4px;
+  .item-toggle {
     flex-shrink: 0;
-  }
-  .vote button {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    border: 1.5px solid var(--border);
-    background: white;
-    font-size: 14px;
-    cursor: pointer;
     display: flex;
     align-items: center;
-    justify-content: center;
-    transition: all 0.15s;
-    padding: 0;
+    gap: 6px;
+    padding: 6px 10px;
+    border: 1.5px solid var(--border);
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
     color: var(--muted);
-  }
-  .vote button:hover { border-color: var(--accent); }
-  .vote button.active.essential {
-    background: var(--essential);
-    border-color: var(--essential);
-    color: white;
-  }
-  .vote button.active.nice {
-    background: var(--nice);
-    border-color: var(--nice);
-    color: white;
-  }
-  .vote button.active.skip {
-    background: var(--skip);
-    border-color: var(--skip);
-    color: white;
-  }
-  .add-row {
-    padding: 14px 16px;
-    background: #faf5ee;
-  }
-  .add-row input {
-    width: 100%;
-    padding: 10px 12px;
-    border-radius: 8px;
-    border: 1px solid var(--border);
     background: white;
-    font-size: 13px;
-    font-family: inherit;
+    letter-spacing: 0.3px;
+    transition: all 0.15s;
   }
-  .add-row input:focus {
-    outline: none;
-    border-color: var(--accent);
+  .item.active .item-toggle {
+    background: var(--on);
+    color: white;
+    border-color: var(--on);
   }
-  .missing-block {
+  .item-toggle .check {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1.5px solid currentColor;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+  }
+  .item.active .item-toggle .check::after {
+    content: '✓';
+  }
+
+  .missing-block, .name-row {
     background: var(--card);
     margin: 16px 12px;
     padding: 18px;
     border-radius: 14px;
     border: 1px solid var(--border);
   }
-  .missing-block h3 {
+  .missing-block h3, .name-row h3 {
     margin: 0 0 6px 0;
     font-size: 15px;
   }
-  .missing-block p {
+  .missing-block p, .name-row p {
     margin: 0 0 12px 0;
     color: var(--muted);
     font-size: 13px;
   }
   .missing-block textarea {
     width: 100%;
-    min-height: 90px;
+    min-height: 100px;
     padding: 12px;
     border-radius: 10px;
     border: 1px solid var(--border);
@@ -186,18 +206,10 @@
     font-family: inherit;
     resize: vertical;
   }
-  .name-row {
-    background: var(--card);
-    margin: 16px 12px;
-    padding: 18px;
-    border-radius: 14px;
-    border: 1px solid var(--border);
-  }
-  .name-row label {
-    display: block;
-    font-size: 13px;
-    color: var(--muted);
-    margin-bottom: 6px;
+  .missing-block textarea:focus,
+  .name-row input:focus {
+    outline: none;
+    border-color: var(--accent);
   }
   .name-row input {
     width: 100%;
@@ -206,7 +218,9 @@
     border: 1px solid var(--border);
     background: white;
     font-size: 14px;
+    font-family: inherit;
   }
+
   .footer-bar {
     position: fixed;
     bottom: 0;
@@ -240,19 +254,6 @@
     flex: 0 0 auto !important;
     padding: 14px 16px !important;
   }
-  .summary-bar {
-    background: var(--accent-soft);
-    padding: 10px 20px;
-    text-align: center;
-    font-size: 13px;
-    color: var(--ink);
-    font-weight: 500;
-    position: sticky;
-    top: 0;
-    z-index: 5;
-    border-bottom: 1px solid var(--border);
-  }
-  .summary-bar strong { color: var(--accent); }
   .thank-you {
     display: none;
     position: fixed;
@@ -287,37 +288,42 @@
 <body>
 
 <header>
-  <h1>Help us build the perfect baby box</h1>
-  <p>A starter kit of everything 0–1 year olds really need</p>
+  <h1>Help me build the perfect baby box</h1>
+  <p>Tap what's <strong>mandatory</strong> for new parents in the first year</p>
 </header>
 
 <div class="intro">
-  Hi mums! <strong>👋</strong> Based on what we've all been buying & selling in this group, I've put together a checklist of things parents need in the first year. Could you take 2 mins to validate it? Mark each item as essential, nice-to-have, or skip — and add anything I missed at the bottom. Thank you! 💛
+  Hi mums! 👋 Based on what we've all been buying & selling in this group, I've put together a checklist. Tap <strong>Mandatory</strong> on the items you think every new parent truly needs — and add anything I missed. Takes ~2 mins. Thank you! 💛
 </div>
 
-<div class="legend">
-  <span><span class="dot essential"></span> Must-have</span>
-  <span><span class="dot nice"></span> Nice-to-have</span>
-  <span><span class="dot skip"></span> Don't need</span>
+<div class="question-block">
+  <h3>Which seasons did your baby live through in their first year?</h3>
+  <p>Pick all that apply — helps me think about seasonal items.</p>
+  <div class="season-chips" id="seasonChips">
+    <button class="season-chip" data-season="spring">🌸 Spring<small>Mar–May</small></button>
+    <button class="season-chip" data-season="summer">☀️ Summer<small>Jun–Aug</small></button>
+    <button class="season-chip" data-season="autumn">🍂 Autumn<small>Sep–Nov</small></button>
+    <button class="season-chip" data-season="winter">❄️ Winter<small>Dec–Feb</small></button>
+  </div>
 </div>
 
-<div class="summary-bar" id="summary">Tap the circles next to each item · <strong><span id="voted">0</span></strong> rated</div>
+<div class="summary-bar" id="summary"><strong><span id="voted">0</span></strong> marked as mandatory</div>
 
 <div id="checklist"></div>
 
 <div class="missing-block">
-  <h3>What did I miss? 🙏</h3>
-  <p>Anything important that's not on the list — please add it here. Brands you swear by also welcome.</p>
+  <h3>Anything missing? 🙏</h3>
+  <p>What else do you think is essential in the first year — that's not in the list above? Brands you swear by are also welcome.</p>
   <textarea id="missing" placeholder="e.g., White noise machine, specific brand of swaddle, postpartum padsicles..."></textarea>
 </div>
 
 <div class="name-row">
-  <label for="name">Your name (optional)</label>
+  <h3>Your name (optional)</h3>
   <input type="text" id="name" placeholder="So I know who to thank!" />
 </div>
 
 <div class="footer-bar">
-  <button class="btn-secondary" onclick="copyToClipboard()">📋</button>
+  <button class="btn-secondary" onclick="copyToClipboard()" title="Copy to clipboard">📋</button>
   <button class="btn-primary" onclick="shareWhatsApp()">Send via WhatsApp</button>
 </div>
 
@@ -451,7 +457,9 @@ const CHECKLIST = {
   ]
 };
 
+const SEASON_NAMES = {spring: "Spring", summer: "Summer", autumn: "Autumn", winter: "Winter"};
 const state = {};
+const userSeasons = new Set();
 const container = document.getElementById('checklist');
 
 Object.entries(CHECKLIST).forEach(([section, items], sIdx) => {
@@ -463,64 +471,85 @@ Object.entries(CHECKLIST).forEach(([section, items], sIdx) => {
     const key = `${sIdx}-${iIdx}`;
     const row = document.createElement('div');
     row.className = 'item';
+    row.dataset.key = key;
     row.innerHTML = `
       <span class="item-label">${item}</span>
-      <div class="vote" data-key="${key}">
-        <button class="essential" data-vote="essential" title="Must-have">★</button>
-        <button class="nice" data-vote="nice" title="Nice to have">○</button>
-        <button class="skip" data-vote="skip" title="Don't need">✕</button>
-      </div>
+      <span class="item-toggle"><span class="check"></span>Mandatory</span>
     `;
     sec.appendChild(row);
-    state[key] = { item, section, vote: null };
+    state[key] = { item, section, mandatory: false };
   });
   container.appendChild(sec);
 });
 
 container.addEventListener('click', (e) => {
-  const btn = e.target.closest('button[data-vote]');
-  if (!btn) return;
-  const voteGroup = btn.closest('.vote');
-  const key = voteGroup.dataset.key;
-  const vote = btn.dataset.vote;
-  if (state[key].vote === vote) {
-    state[key].vote = null;
-    voteGroup.querySelectorAll('button').forEach(b => b.classList.remove('active'));
-  } else {
-    state[key].vote = vote;
-    voteGroup.querySelectorAll('button').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-  }
+  const row = e.target.closest('.item');
+  if (!row) return;
+  const key = row.dataset.key;
+  state[key].mandatory = !state[key].mandatory;
+  row.classList.toggle('active', state[key].mandatory);
   updateSummary();
 });
 
+document.getElementById('seasonChips').addEventListener('click', (e) => {
+  const chip = e.target.closest('.season-chip');
+  if (!chip) return;
+  const season = chip.dataset.season;
+  if (userSeasons.has(season)) {
+    userSeasons.delete(season);
+    chip.classList.remove('active');
+  } else {
+    userSeasons.add(season);
+    chip.classList.add('active');
+  }
+});
+
 function updateSummary() {
-  const voted = Object.values(state).filter(s => s.vote).length;
+  const voted = Object.values(state).filter(s => s.mandatory).length;
   document.getElementById('voted').textContent = voted;
 }
 
 function buildSummary() {
   const name = document.getElementById('name').value.trim();
   const missing = document.getElementById('missing').value.trim();
-  const essentials = [];
-  const nice = [];
-  const skips = [];
+
+  // Group mandatory items by section
+  const bySection = {};
   Object.values(state).forEach(s => {
-    if (s.vote === 'essential') essentials.push(s.item);
-    else if (s.vote === 'nice') nice.push(s.item);
-    else if (s.vote === 'skip') skips.push(s.item);
+    if (s.mandatory) {
+      if (!bySection[s.section]) bySection[s.section] = [];
+      bySection[s.section].push(s.item);
+    }
   });
+
   let out = '*Baby checklist feedback*';
   if (name) out += ` from ${name}`;
-  out += '\n\n';
-  if (essentials.length) out += `⭐ *Must-haves (${essentials.length}):*\n${essentials.map(i => '• ' + i).join('\n')}\n\n`;
-  if (nice.length) out += `🌸 *Nice-to-haves (${nice.length}):*\n${nice.map(i => '• ' + i).join('\n')}\n\n`;
-  if (skips.length) out += `🚫 *Skip (${skips.length}):*\n${skips.map(i => '• ' + i).join('\n')}\n\n`;
-  if (missing) out += `➕ *Missing from list:*\n${missing}\n`;
-  if (!essentials.length && !nice.length && !skips.length && !missing) {
-    out += '_(no items rated yet)_';
+  out += '\n';
+
+  if (userSeasons.size > 0) {
+    const seasonsList = Array.from(userSeasons).map(s => SEASON_NAMES[s]).join(', ');
+    out += `\n🗓️ *Seasons lived through:* ${seasonsList}\n`;
   }
-  return out;
+
+  const sectionsWithMandatory = Object.keys(bySection);
+  if (sectionsWithMandatory.length > 0) {
+    const total = sectionsWithMandatory.reduce((sum, k) => sum + bySection[k].length, 0);
+    out += `\n✅ *Mandatory items (${total}):*\n`;
+    sectionsWithMandatory.forEach(sec => {
+      out += `\n${sec}\n`;
+      bySection[sec].forEach(item => out += `• ${item}\n`);
+    });
+  }
+
+  if (missing) {
+    out += `\n➕ *Also essential (mum's additions):*\n${missing}\n`;
+  }
+
+  if (sectionsWithMandatory.length === 0 && !missing) {
+    out += '\n_(nothing marked yet)_';
+  }
+
+  return out.trim();
 }
 
 function shareWhatsApp() {
