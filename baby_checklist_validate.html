@@ -139,7 +139,7 @@
   }
   .item:last-child { border-bottom: none; }
   .item:hover { background: #fbf7f1; }
-  .item.active { background: var(--on-soft); }
+  .item.active { background: #fff0ed; }
   .item-label {
     flex: 1;
     font-size: 14px;
@@ -161,9 +161,9 @@
     transition: all 0.15s;
   }
   .item.active .item-toggle {
-    background: var(--on);
+    background: var(--accent);
     color: white;
-    border-color: var(--on);
+    border-color: var(--accent);
   }
   .item-toggle .check {
     width: 14px;
@@ -289,11 +289,11 @@
 
 <header>
   <h1>Help me build the perfect baby box</h1>
-  <p>Tap what's <strong>mandatory</strong> for new parents in the first year</p>
+  <p>Everything listed is assumed mandatory unless you mark it otherwise</p>
 </header>
 
 <div class="intro">
-  Hi mums! 👋 Based on what we've all been buying & selling in this group, I've put together a checklist. Tap <strong>Mandatory</strong> on the items you think every new parent truly needs — and add anything I missed. Takes ~2 mins. Thank you! 💛
+  Hi mums! 👋 Based on what we've all been buying & selling in this group, I've put together a checklist. The listed items are assumed to be mandatory for a new parent box. Tap <strong>Not mandatory</strong> only on the items you think parents can skip — and add anything I missed. Takes ~2 mins. Thank you! 💛
 </div>
 
 <div class="question-block">
@@ -307,7 +307,7 @@
   </div>
 </div>
 
-<div class="summary-bar" id="summary"><strong><span id="voted">0</span></strong> marked as mandatory</div>
+<div class="summary-bar" id="summary"><strong><span id="voted">0</span></strong> marked as not mandatory</div>
 
 <div id="checklist"></div>
 
@@ -474,10 +474,10 @@ Object.entries(CHECKLIST).forEach(([section, items], sIdx) => {
     row.dataset.key = key;
     row.innerHTML = `
       <span class="item-label">${item}</span>
-      <span class="item-toggle"><span class="check"></span>Mandatory</span>
+      <span class="item-toggle"><span class="check"></span>Not mandatory</span>
     `;
     sec.appendChild(row);
-    state[key] = { item, section, mandatory: false };
+    state[key] = { item, section, notMandatory: false };
   });
   container.appendChild(sec);
 });
@@ -486,8 +486,8 @@ container.addEventListener('click', (e) => {
   const row = e.target.closest('.item');
   if (!row) return;
   const key = row.dataset.key;
-  state[key].mandatory = !state[key].mandatory;
-  row.classList.toggle('active', state[key].mandatory);
+  state[key].notMandatory = !state[key].notMandatory;
+  row.classList.toggle('active', state[key].notMandatory);
   updateSummary();
 });
 
@@ -505,7 +505,7 @@ document.getElementById('seasonChips').addEventListener('click', (e) => {
 });
 
 function updateSummary() {
-  const voted = Object.values(state).filter(s => s.mandatory).length;
+  const voted = Object.values(state).filter(s => s.notMandatory).length;
   document.getElementById('voted').textContent = voted;
 }
 
@@ -513,10 +513,10 @@ function buildSummary() {
   const name = document.getElementById('name').value.trim();
   const missing = document.getElementById('missing').value.trim();
 
-  // Group mandatory items by section
+  // Group items marked as not mandatory by section
   const bySection = {};
   Object.values(state).forEach(s => {
-    if (s.mandatory) {
+    if (s.notMandatory) {
       if (!bySection[s.section]) bySection[s.section] = [];
       bySection[s.section].push(s.item);
     }
@@ -531,11 +531,11 @@ function buildSummary() {
     out += `\n🗓️ *Seasons lived through:* ${seasonsList}\n`;
   }
 
-  const sectionsWithMandatory = Object.keys(bySection);
-  if (sectionsWithMandatory.length > 0) {
-    const total = sectionsWithMandatory.reduce((sum, k) => sum + bySection[k].length, 0);
-    out += `\n✅ *Mandatory items (${total}):*\n`;
-    sectionsWithMandatory.forEach(sec => {
+  const sectionsWithNotMandatory = Object.keys(bySection);
+  if (sectionsWithNotMandatory.length > 0) {
+    const total = sectionsWithNotMandatory.reduce((sum, k) => sum + bySection[k].length, 0);
+    out += `\n🚫 *Not mandatory items (${total}):*\n`;
+    sectionsWithNotMandatory.forEach(sec => {
       out += `\n${sec}\n`;
       bySection[sec].forEach(item => out += `• ${item}\n`);
     });
@@ -545,8 +545,8 @@ function buildSummary() {
     out += `\n➕ *Also essential (mum's additions):*\n${missing}\n`;
   }
 
-  if (sectionsWithMandatory.length === 0 && !missing) {
-    out += '\n_(nothing marked yet)_';
+  if (sectionsWithNotMandatory.length === 0 && !missing) {
+    out += '\n_(all listed items look mandatory)_';
   }
 
   return out.trim();
