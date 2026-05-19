@@ -297,8 +297,8 @@
 </div>
 
 <div class="question-block">
-  <h3>Which seasons did your baby live through in their first year?</h3>
-  <p>Pick all that apply — helps me think about seasonal items.</p>
+  <h3>When was/is your baby born?</h3>
+  <p>So I know which seasonal items belong in your starter box.</p>
   <div class="season-chips" id="seasonChips">
     <button class="season-chip" data-season="spring">🌸 Spring<small>Mar–May</small></button>
     <button class="season-chip" data-season="summer">☀️ Summer<small>Jun–Aug</small></button>
@@ -459,7 +459,7 @@ const CHECKLIST = {
 
 const SEASON_NAMES = {spring: "Spring", summer: "Summer", autumn: "Autumn", winter: "Winter"};
 const state = {};
-const userSeasons = new Set();
+let userSeason = null;
 const container = document.getElementById('checklist');
 
 Object.entries(CHECKLIST).forEach(([section, items], sIdx) => {
@@ -495,11 +495,11 @@ document.getElementById('seasonChips').addEventListener('click', (e) => {
   const chip = e.target.closest('.season-chip');
   if (!chip) return;
   const season = chip.dataset.season;
-  if (userSeasons.has(season)) {
-    userSeasons.delete(season);
-    chip.classList.remove('active');
+  document.querySelectorAll('.season-chip').forEach(c => c.classList.remove('active'));
+  if (userSeason === season) {
+    userSeason = null;
   } else {
-    userSeasons.add(season);
+    userSeason = season;
     chip.classList.add('active');
   }
 });
@@ -526,9 +526,8 @@ function buildSummary() {
   if (name) out += ` from ${name}`;
   out += '\n';
 
-  if (userSeasons.size > 0) {
-    const seasonsList = Array.from(userSeasons).map(s => SEASON_NAMES[s]).join(', ');
-    out += `\n🗓️ *Seasons lived through:* ${seasonsList}\n`;
+  if (userSeason) {
+    out += `\n👶 *Baby born in:* ${SEASON_NAMES[userSeason]}\n`;
   }
 
   const sectionsWithNotMandatory = Object.keys(bySection);
