@@ -98,20 +98,6 @@
     border-color: var(--accent);
   }
 
-  .summary-bar {
-    background: var(--accent-soft);
-    padding: 10px 20px;
-    text-align: center;
-    font-size: 13px;
-    color: var(--ink);
-    font-weight: 500;
-    position: sticky;
-    top: 0;
-    z-index: 5;
-    border-bottom: 1px solid var(--border);
-  }
-  .summary-bar strong { color: var(--accent); }
-
   section {
     margin: 16px 12px;
     background: var(--card);
@@ -135,51 +121,26 @@
     padding: 12px 14px;
     border-bottom: 1px solid #f4eee5;
     gap: 10px;
-    cursor: pointer;
     user-select: none;
   }
   .item:last-child { border-bottom: none; }
   .item:hover { background: #fbf7f1; }
-  .item.active { background: #fff0ed; }
   .item-label {
     flex: 1;
     font-size: 14px;
     line-height: 1.35;
   }
-  .item-toggle {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 10px;
-    border: 1.5px solid var(--border);
-    border-radius: 999px;
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--muted);
-    background: white;
-    letter-spacing: 0.3px;
-    transition: all 0.15s;
+  .category-title {
+    padding: 12px 14px 6px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: #fffaf5;
+    border-top: 1px solid #f4eee5;
   }
-  .item.active .item-toggle {
-    background: var(--accent);
-    color: white;
-    border-color: var(--accent);
-  }
-  .item-toggle .check {
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    border: 1.5px solid currentColor;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 9px;
-  }
-  .item.active .item-toggle .check::after {
-    content: '✓';
-  }
-
+  h2 + .category-title { border-top: none; }
   .missing-block, .name-row {
     background: var(--card);
     margin: 16px 12px;
@@ -289,33 +250,20 @@
 <body>
 
 <header>
-  <h1>Help me build the perfect baby box</h1>
-  <p>Everything listed is assumed mandatory unless you mark it otherwise</p>
+  <h1>Berlin's New Parent Einkaufswagen</h1>
+  <p>The checklist of items to purchase for new parents</p>
 </header>
 
 <div class="intro">
-  Hi mums! 👋 Based on what we've all been buying & selling in this group, I've put together a checklist. The listed items are assumed to be mandatory for a new parent box. Tap <strong>Not mandatory</strong> only on the items you think parents can skip — and add anything I missed. Takes ~2 mins. Thank you! 💛
+  Hi mums! 👋 Based on what we've all been buying & selling in sell stuff group, I've put together a checklist. If you have had more products in the shelves that were preloved and that you would sell in future, can you add them? Takes ~2 mins. Thank you! 💛
 </div>
-
-<div class="question-block">
-  <h3>When was/is your baby born?</h3>
-  <p>So I know which seasonal items belong in your starter box.</p>
-  <div class="season-chips" id="seasonChips">
-    <button class="season-chip" data-season="spring">🌸 Spring<small>Mar–May</small></button>
-    <button class="season-chip" data-season="summer">☀️ Summer<small>Jun–Aug</small></button>
-    <button class="season-chip" data-season="autumn">🍂 Autumn<small>Sep–Nov</small></button>
-    <button class="season-chip" data-season="winter">❄️ Winter<small>Dec–Feb</small></button>
-  </div>
-</div>
-
-<div class="summary-bar" id="summary"><strong><span id="voted">0</span></strong> marked as not mandatory</div>
 
 <div id="checklist"></div>
 
 <div class="missing-block">
   <h3>Anything missing? 🙏</h3>
-  <p>What else do you think is essential in the first year — that's not in the list above? Brands you swear by are also welcome.</p>
-  <textarea id="missing" placeholder="e.g., White noise machine, specific brand of swaddle, postpartum padsicles..."></textarea>
+  <p>What else did you use in the first year that is not in the list above? Brands you swear by are also welcome.</p>
+  <textarea id="missing" placeholder="e.g., carrier brand, favorite bath seat, extra sleep item, postpartum product..."></textarea>
 </div>
 
 <div class="question-block">
@@ -366,205 +314,225 @@
 
 <script>
 const CHECKLIST = {
-  "😴 Sleep": [
-    "Bedside co-sleeper / Beistellbett (mum picks: Babybay)",
-    "Crib mattress (70×140)",
-    "Swaddles",
-    "Crib / cot",
-    "Baby nest (Babynest) — for contact naps",
-    "Fitted crib sheets",
-    "Sleeping bag / sleep sack (TOG 1 + 2.5)",
-    "Crib mobile with hanging toys",
-    "Baby monitor",
-    "Blackout blinds",
-    "Travel cot / play pen",
-    "Bed rail",
-    "White noise machine"
-  ],
-  "🍼 Feeding — Breast & Bottle": [
-    "Breast pump (manual or electric)",
-    "Milk collectors (mum picks: Haakaa, Medela)",
-    "Nipple shields",
-    "Nursing pads (Stilleinlagen)",
-    "Nipple cream",
-    "Nursing pillow",
-    "Bottles (4–6)",
-    "Bottle brush",
-    "Burp cloths / muslins",
-    "Bibs",
-    "Flange inserts (multiple sizes — fit matters for pump efficiency)",
-    "Wearable breast pump (mum picks: Elvie Stride, Willow)",
-    "Milk storage bags",
-    "Steriliser",
-    "Bottle warmer"
-  ],
-  "🥄 Feeding — Solids (6m+)": [
-    "High chair",
-    "Suction bowls & plates",
-    "Soft-tip spoons",
-    "Sippy / training cup",
-    "Food storage / freezer trays",
-    "Newborn high chair set (mum picks: Stokke Tripp Trapp newborn set) — for 0–6m",
-    "Silicone bib with catcher",
-    "Food warmer (Brei-Wärmer)"
-  ],
-  "🛁 Bath & Hygiene": [
-    "Baby bath tub with newborn insert",
-    "Hooded towels",
-    "Washcloths",
-    "Baby wash / shampoo",
-    "Almond oil (Mandelöl) for bath & skin",
-    "Baby lotion / oil",
-    "Soft hairbrush",
-    "Nail clippers / file",
-    "Bath + body thermometer",
-    "Potty / Töpfchen (for later)",
-    "Bath seat (mum picks: Angelcare)"
-  ],
-  "👶 Diapering": [
-    "Changing mat + cover",
-    "Diapers (newborn → size 4)",
-    "Wipes",
-    "Diaper rash cream",
-    "Travel changing pouch",
-    "Heat lamp for changing table (mum picks: Reer Wärmelampe)",
-    "Black tea + healing wool (for diaper rash)",
-    "Cloth diaper kit (Stoffwindeln + prefolds) — eco alternative",
-    "Diaper bin (mum picks: Angelcare)",
-    "Waterproof muslin (Moltontücher)",
-    "Wet bags",
-    "Changing table (Wickelkommode) — or skip it and use a moulded foam topper on your washing machine"
-  ],
-  "👕 Clothing": [
-    "Newborn bundle (sizes 50–62)",
-    "Clothes 3–6m (62/68)",
-    "Clothes 6–9m (74)",
-    "Clothes 9–12m (80)",
-    "Caps / hats (organic cotton, wool)",
-    "Socks (thick, thin, grip socks for crawling)",
-    "First walking shoes (21–23)",
-    "Rain suit / waterproof jumpsuit",
-    "Winter overall / snowsuit",
-    "Body extender (Body Verlängerung)",
-    "First soft shoes (17–20)",
-    "Swimsuit + cap + swim ring"
-  ],
-  "🚼 Travel & Mobility": [
-    "Stroller / pram (mum picks: Bugaboo, UPPAbaby Vista)",
-    "Carrycot attachment (Tragewanne)",
-    "Travel buggy (plane-friendly)",
-    "Rain cover + sun shade + mosquito net + footmuff",
-    "Stroller bottle/cup holder",
-    "Car seat — newborn + infant (mum picks: Maxi Cosi, Cybex, UPPAbaby Mesa)",
-    "Isofix base — stays in the car, car seat clicks in (bought separately)",
-    "Baby carrier (mum picks: Ergobaby) — or hip seat",
-    "Baby wrap / Tragetuch (mum picks: Boba Wrap, Didymos) — newborn favorite",
-    "Stroller carry bag",
-    "Diaper bag"
-  ],
-  "🧸 Play & Development": [
-    "Play mat with arch + hanging toys",
-    "Play gym",
-    "Sensory / cloth book",
-    "Activity cube / tree",
-    "Bath toys",
-    "Teethers",
-    "Board books",
-    "Montessori starter set (10m+)",
-    "Learning tower (12m+)",
-    "Balance bike / Laufrad (12m+)",
-    "Musical toys (xylophone etc.)",
-    "Stacking blocks",
-    "Baby swing / electric rocker (mum picks: Joie, Ingenuity)",
-    "Push-along / Bobby car",
-    "Wooden push walker / Lauflernwagen (mum picks: Haba)",
-    "Toniebox + first Tonie figures",
-    "Ball pit",
-    "Baby bouncer"
-  ],
-  "🛡️ Safety & Babyproofing": [
-    "Outlet covers",
-    "Corner / edge foam protectors",
-    "Cabinet locks",
-    "Window restrictors",
-    "Anti-tip furniture straps",
-    "First aid kit",
-    "Nasal aspirator",
-    "Baby gates",
-    "Baby noise protection (mum picks: Alpine Muffy)",
-    "Shopping cart protector"
-  ],
-  "💖 Mom Care": [
-    "Pregnancy / side-sleeper pillow",
-    "Nursing bras",
-    "Postpartum underwear (high-waisted / mesh)",
-    "Postpartum recovery kit",
-    "Lid + straw coffee mug (drink hot drinks while babywearing)",
-    "Postpartum meal prep / freezer meals for the first weeks",
-    "Postnatal yoga / recovery program",
-    "Maternity jacket with newborn insert (mum picks: C&A Mama)",
-    "Peri bottle",
-    "Lansinoh warm/cold breast compress",
-    "Tummy belt / belly band"
-  ],
-  "💡 Berlin tips & resources (info, not items to buy)": [
-    "Meal chain — set up via MealTrain or ask friends/family for rotating meals",
-    "Used baby clothes — Kleinanzeigen, Mamikreisel, Vinted, flea markets",
-    "Toy & equipment loan / subscription — Tchibo, Grover, local toy libraries",
-    "Co-sleeping is OK — many babies don't need a separate crib early on",
-    "Changing station hack — moulded foam topper on top of washing machine (skip the Wickelkommode)",
-    "Babywearing groups in Berlin — try a wrap before buying",
-    "Buy/sell secondhand <b>0–1 yrs</b> WhatsApp group → <a href='https://chat.whatsapp.com/HrbJrUAyfRXLsIaX3l8Ywm' target='_blank' style='color:#d4806a;'>join</a>",
-    "Buy/sell secondhand <b>1–2 yrs</b> WhatsApp group → <a href='https://chat.whatsapp.com/IBTmFM3PAoR349gSRZCvi5' target='_blank' style='color:#d4806a;'>join</a>",
-    "Buy/sell secondhand <b>2–3 yrs</b> WhatsApp group → <a href='https://chat.whatsapp.com/DcR5JFANB3yFZVPIr0Ts8l' target='_blank' style='color:#d4806a;'>join</a>"
-  ]
+  "0-1 month": {
+    "😴 Sleep": [
+      "Bedside co-sleeper / Beistellbett (mum picks: Babybay)",
+      "Crib / cot",
+      "Crib mattress (70×140)",
+      "Fitted crib sheets",
+      "Sleeping bag / sleep sack (TOG 1 + 2.5)",
+      "Swaddles",
+      "Baby nest (Babynest) — for contact naps",
+      "Baby monitor",
+      "White noise machine"
+    ],
+    "🍼 Feeding — Breast & Bottle": [
+      "Breast pump (manual or electric)",
+      "Milk collectors (mum picks: Haakaa, Medela)",
+      "Nipple shields",
+      "Nursing pads (Stilleinlagen)",
+      "Nipple cream",
+      "Nursing pillow",
+      "Bottles (4–6)",
+      "Bottle brush",
+      "Burp cloths / muslins",
+      "Bibs",
+      "Flange inserts (multiple sizes — fit matters for pump efficiency)",
+      "Milk storage bags",
+      "Steriliser",
+      "Bottle warmer"
+    ],
+    "🛁 Bath & Hygiene": [
+      "Baby bath tub with newborn insert",
+      "Hooded towels",
+      "Washcloths",
+      "Baby wash / shampoo",
+      "Almond oil (Mandelöl) for bath & skin",
+      "Baby lotion / oil",
+      "Soft hairbrush",
+      "Nail clippers / file",
+      "Bath + body thermometer"
+    ],
+    "👶 Diapering": [
+      "Changing mat + cover",
+      "Diapers (newborn → size 4)",
+      "Wipes",
+      "Diaper rash cream",
+      "Travel changing pouch",
+      "Heat lamp for changing table (mum picks: Reer Wärmelampe)",
+      "Black tea + healing wool (for diaper rash)",
+      "Diaper bin (mum picks: Angelcare)",
+      "Waterproof muslin (Moltontücher)",
+      "Wet bags",
+      "Changing table (Wickelkommode) — or skip it and use a moulded foam topper on your washing machine"
+    ],
+    "👕 Clothing": [
+      "Newborn bundle (sizes 50–62)",
+      "Caps / hats (organic cotton, wool)",
+      "Socks (thick and thin)",
+      "Body extender (Body Verlängerung)",
+      "Winter overall / snowsuit"
+    ],
+    "🚼 Travel & Mobility": [
+      "Stroller / pram (mum picks: Bugaboo, UPPAbaby Vista)",
+      "Carrycot attachment (Tragewanne)",
+      "Rain cover + sun shade + mosquito net + footmuff",
+      "Car seat — newborn + infant (mum picks: Maxi Cosi, Cybex, UPPAbaby Mesa)",
+      "Isofix base — stays in the car, car seat clicks in (bought separately)",
+      "Baby carrier (mum picks: Ergobaby) — or hip seat",
+      "Baby wrap / Tragetuch (mum picks: Boba Wrap, Didymos) — newborn favorite",
+      "Stroller carry bag",
+      "Diaper bag"
+    ],
+    "💖 Mom Care": [
+      "Pregnancy / side-sleeper pillow",
+      "Nursing bras",
+      "Postpartum underwear (high-waisted / mesh)",
+      "Postpartum recovery kit",
+      "Lid + straw coffee mug (drink hot drinks while babywearing)",
+      "Postpartum meal prep / freezer meals for the first weeks",
+      "Maternity jacket with newborn insert (mum picks: C&A Mama)",
+      "Peri bottle",
+      "Lansinoh warm/cold breast compress",
+      "Tummy belt / belly band"
+    ]
+  },
+  "1-3 months": {
+    "😴 Sleep": [
+      "Crib mobile with hanging toys",
+      "Blackout blinds"
+    ],
+    "🍼 Feeding — Breast & Bottle": [
+      "Wearable breast pump (mum picks: Elvie Stride, Willow)"
+    ],
+    "👶 Diapering": [
+      "Cloth diaper kit (Stoffwindeln + prefolds) — eco alternative"
+    ],
+    "👕 Clothing": [
+      "Clothes 3–6m (62/68)"
+    ],
+    "🧸 Play & Development": [
+      "Play mat with arch + hanging toys",
+      "Play gym",
+      "Sensory / cloth book",
+      "Baby swing / electric rocker (mum picks: Joie, Ingenuity)",
+      "Baby bouncer"
+    ],
+    "🛡️ Safety & Babyproofing": [
+      "First aid kit",
+      "Nasal aspirator",
+      "Baby noise protection (mum picks: Alpine Muffy)"
+    ],
+    "💖 Mom Care": [
+      "Postnatal yoga / recovery program"
+    ]
+  },
+  "3-6 months": {
+    "😴 Sleep": [
+      "Travel cot / play pen"
+    ],
+    "🥄 Feeding — Solids": [
+      "Newborn high chair set (mum picks: Stokke Tripp Trapp newborn set) — for 0–6m",
+      "High chair",
+      "Suction bowls & plates",
+      "Soft-tip spoons",
+      "Sippy / training cup",
+      "Food storage / freezer trays",
+      "Silicone bib with catcher",
+      "Food warmer (Brei-Wärmer)"
+    ],
+    "🛁 Bath & Hygiene": [
+      "Bath seat (mum picks: Angelcare)"
+    ],
+    "👕 Clothing": [
+      "Clothes 6–9m (74)",
+      "First soft shoes (17–20)",
+      "Swimsuit + cap + swim ring"
+    ],
+    "🚼 Travel & Mobility": [
+      "Stroller bottle/cup holder"
+    ],
+    "🧸 Play & Development": [
+      "Bath toys",
+      "Teethers",
+      "Board books",
+      "Activity cube / tree",
+      "Stacking blocks",
+      "Musical toys (xylophone etc.)"
+    ]
+  },
+  "6-12 months": {
+    "😴 Sleep": [
+      "Bed rail"
+    ],
+    "🛁 Bath & Hygiene": [
+      "Potty / Töpfchen (for later)"
+    ],
+    "👕 Clothing": [
+      "Clothes 9–12m (80)",
+      "Grip socks for crawling",
+      "Rain suit / waterproof jumpsuit",
+      "First walking shoes (21–23)"
+    ],
+    "🚼 Travel & Mobility": [
+      "Travel buggy (plane-friendly)"
+    ],
+    "🧸 Play & Development": [
+      "Montessori starter set (10m+)",
+      "Learning tower (12m+)",
+      "Balance bike / Laufrad (12m+)",
+      "Push-along / Bobby car",
+      "Wooden push walker / Lauflernwagen (mum picks: Haba)",
+      "Toniebox + first Tonie figures",
+      "Ball pit"
+    ],
+    "🛡️ Safety & Babyproofing": [
+      "Outlet covers",
+      "Corner / edge foam protectors",
+      "Cabinet locks",
+      "Window restrictors",
+      "Anti-tip furniture straps",
+      "Baby gates",
+      "Shopping cart protector"
+    ]
+  },
+  "💡 Berlin tips & resources (info, not items to buy)": {
+    "Local resources": [
+      "Meal chain — set up via MealTrain or ask friends/family for rotating meals",
+      "Used baby clothes — Kleinanzeigen, Mamikreisel, Vinted, flea markets",
+      "Toy & equipment loan / subscription — Tchibo, Grover, local toy libraries",
+      "Co-sleeping is OK — many babies don't need a separate crib early on",
+      "Changing station hack — moulded foam topper on top of washing machine (skip the Wickelkommode)",
+      "Babywearing groups in Berlin — try a wrap before buying",
+      "Buy/sell secondhand <b>0–1 yrs</b> WhatsApp group → <a href='https://chat.whatsapp.com/HrbJrUAyfRXLsIaX3l8Ywm' target='_blank' style='color:#d4806a;'>join</a>",
+      "Buy/sell secondhand <b>1–2 yrs</b> WhatsApp group → <a href='https://chat.whatsapp.com/IBTmFM3PAoR349gSRZCvi5' target='_blank' style='color:#d4806a;'>join</a>",
+      "Buy/sell secondhand <b>2–3 yrs</b> WhatsApp group → <a href='https://chat.whatsapp.com/DcR5JFANB3yFZVPIr0Ts8l' target='_blank' style='color:#d4806a;'>join</a>"
+    ]
+  }
 };
-
-const SEASON_NAMES = {spring: "Spring", summer: "Summer", autumn: "Autumn", winter: "Winter"};
-const state = {};
-let userSeason = null;
 const container = document.getElementById('checklist');
 
-Object.entries(CHECKLIST).forEach(([section, items], sIdx) => {
+Object.entries(CHECKLIST).forEach(([ageGroup, categories]) => {
   const sec = document.createElement('section');
   const h2 = document.createElement('h2');
-  h2.textContent = section;
+  h2.textContent = ageGroup;
   sec.appendChild(h2);
-  items.forEach((item, iIdx) => {
-    const key = `${sIdx}-${iIdx}`;
-    const row = document.createElement('div');
-    row.className = 'item';
-    row.dataset.key = key;
-    row.innerHTML = `
-      <span class="item-label">${item}</span>
-      <span class="item-toggle"><span class="check"></span>Not mandatory</span>
-    `;
-    sec.appendChild(row);
-    state[key] = { item, section, notMandatory: false };
+
+  Object.entries(categories).forEach(([category, items]) => {
+    const categoryTitle = document.createElement('div');
+    categoryTitle.className = 'category-title';
+    categoryTitle.textContent = category;
+    sec.appendChild(categoryTitle);
+
+    items.forEach((item) => {
+      const row = document.createElement('div');
+      row.className = 'item';
+      row.innerHTML = `<span class="item-label">${item}</span>`;
+      sec.appendChild(row);
+    });
   });
+
   container.appendChild(sec);
-});
-
-container.addEventListener('click', (e) => {
-  const row = e.target.closest('.item');
-  if (!row) return;
-  const key = row.dataset.key;
-  state[key].notMandatory = !state[key].notMandatory;
-  row.classList.toggle('active', state[key].notMandatory);
-  updateSummary();
-});
-
-document.getElementById('seasonChips').addEventListener('click', (e) => {
-  const chip = e.target.closest('.season-chip');
-  if (!chip) return;
-  const season = chip.dataset.season;
-  document.querySelectorAll('#seasonChips .season-chip').forEach(c => c.classList.remove('active'));
-  if (userSeason === season) {
-    userSeason = null;
-  } else {
-    userSeason = season;
-    chip.classList.add('active');
-  }
 });
 
 const surveyAnswers = { fridge: null, price: null, printed: null };
@@ -586,46 +554,16 @@ const surveyAnswers = { fridge: null, price: null, printed: null };
   });
 });
 
-function updateSummary() {
-  const voted = Object.values(state).filter(s => s.notMandatory).length;
-  document.getElementById('voted').textContent = voted;
-}
-
 function buildSummary() {
   const name = document.getElementById('name').value.trim();
   const missing = document.getElementById('missing').value.trim();
 
-  // Group items marked as not mandatory by section (skip resources — they're info, not items)
-  const bySection = {};
-  Object.values(state).forEach(s => {
-    if (s.notMandatory && !s.section.includes('Berlin tips')) {
-      if (!bySection[s.section]) bySection[s.section] = [];
-      // Strip any HTML from item label for clean WhatsApp output
-      const clean = s.item.replace(/<[^>]+>/g, '').trim();
-      bySection[s.section].push(clean);
-    }
-  });
-
-  let out = '*Baby checklist feedback*';
+  let out = '*Baby checklist product feedback*';
   if (name) out += ` from ${name}`;
   out += '\n';
 
-  if (userSeason) {
-    out += `\n👶 *Baby born in:* ${SEASON_NAMES[userSeason]}\n`;
-  }
-
-  const sectionsWithNotMandatory = Object.keys(bySection);
-  if (sectionsWithNotMandatory.length > 0) {
-    const total = sectionsWithNotMandatory.reduce((sum, k) => sum + bySection[k].length, 0);
-    out += `\n🚫 *Not mandatory items (${total}):*\n`;
-    sectionsWithNotMandatory.forEach(sec => {
-      out += `\n${sec}\n`;
-      bySection[sec].forEach(item => out += `• ${item}\n`);
-    });
-  }
-
   if (missing) {
-    out += `\n➕ *Also essential (mum's additions):*\n${missing}\n`;
+    out += `\n➕ *Products to add / preloved items I would sell:*\n${missing}\n`;
   }
 
   const FRIDGE_LABELS = {yes: 'Yes', maybe: 'Maybe', no: 'No'};
@@ -638,8 +576,8 @@ function buildSummary() {
     out += `\n`;
   }
 
-  if (sectionsWithNotMandatory.length === 0 && !missing && !surveyAnswers.fridge && !surveyAnswers.price && !surveyAnswers.printed) {
-    out += '\n_(all listed items look mandatory)_';
+  if (!missing && !surveyAnswers.fridge && !surveyAnswers.price && !surveyAnswers.printed) {
+    out += '\n_(no extra products added)_';
   }
 
   return out.trim();
