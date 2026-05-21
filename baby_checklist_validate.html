@@ -330,7 +330,7 @@
 <div class="question-block">
   <h3>How much would you pay for the printable digital version (PDF)?</h3>
   <div class="season-chips" id="priceChips">
-    <button class="season-chip" data-val="0" data-q="price">Wouldn't pay</button>
+    <button class="season-chip" data-val="0" data-q="price">Would not buy</button>
     <button class="season-chip" data-val="5" data-q="price">€5</button>
     <button class="season-chip" data-val="8" data-q="price">€8</button>
     <button class="season-chip" data-val="12" data-q="price">€12</button>
@@ -367,13 +367,13 @@
 <script>
 const CHECKLIST = {
   "😴 Sleep": [
-    "Crib / cot",
     "Bedside co-sleeper / Beistellbett (mum picks: Babybay)",
-    "Baby nest (Babynest) — for contact naps",
     "Crib mattress (70×140)",
+    "Swaddles",
+    "Crib / cot",
+    "Baby nest (Babynest) — for contact naps",
     "Fitted crib sheets",
     "Sleeping bag / sleep sack (TOG 1 + 2.5)",
-    "Swaddles",
     "Crib mobile with hanging toys",
     "Baby monitor",
     "Blackout blinds",
@@ -383,7 +383,6 @@ const CHECKLIST = {
   ],
   "🍼 Feeding — Breast & Bottle": [
     "Breast pump (manual or electric)",
-    "Flange inserts (multiple sizes — fit matters for pump efficiency)",
     "Milk collectors (mum picks: Haakaa, Medela)",
     "Nipple shields",
     "Nursing pads (Stilleinlagen)",
@@ -393,10 +392,11 @@ const CHECKLIST = {
     "Bottle brush",
     "Burp cloths / muslins",
     "Bibs",
+    "Flange inserts (multiple sizes — fit matters for pump efficiency)",
     "Wearable breast pump (mum picks: Elvie Stride, Willow)",
     "Milk storage bags",
-    "Bottle warmer",
-    "Steriliser"
+    "Steriliser",
+    "Bottle warmer"
   ],
   "🥄 Feeding — Solids (6m+)": [
     "High chair",
@@ -432,8 +432,8 @@ const CHECKLIST = {
     "Cloth diaper kit (Stoffwindeln + prefolds) — eco alternative",
     "Diaper bin (mum picks: Angelcare)",
     "Waterproof muslin (Moltontücher)",
-    "Changing table (Wickelkommode) — or skip it and use a moulded foam topper on your washing machine",
-    "Wet bags"
+    "Wet bags",
+    "Changing table (Wickelkommode) — or skip it and use a moulded foam topper on your washing machine"
   ],
   "👕 Clothing": [
     "Newborn bundle (sizes 50–62)",
@@ -467,14 +467,14 @@ const CHECKLIST = {
     "Play gym",
     "Sensory / cloth book",
     "Activity cube / tree",
-    "Musical toys (xylophone etc.)",
-    "Stacking blocks",
     "Bath toys",
     "Teethers",
     "Board books",
     "Montessori starter set (10m+)",
     "Learning tower (12m+)",
     "Balance bike / Laufrad (12m+)",
+    "Musical toys (xylophone etc.)",
+    "Stacking blocks",
     "Baby swing / electric rocker (mum picks: Joie, Ingenuity)",
     "Push-along / Bobby car",
     "Wooden push walker / Lauflernwagen (mum picks: Haba)",
@@ -595,12 +595,14 @@ function buildSummary() {
   const name = document.getElementById('name').value.trim();
   const missing = document.getElementById('missing').value.trim();
 
-  // Group items marked as not mandatory by section
+  // Group items marked as not mandatory by section (skip resources — they're info, not items)
   const bySection = {};
   Object.values(state).forEach(s => {
-    if (s.notMandatory) {
+    if (s.notMandatory && !s.section.includes('Berlin tips')) {
       if (!bySection[s.section]) bySection[s.section] = [];
-      bySection[s.section].push(s.item);
+      // Strip any HTML from item label for clean WhatsApp output
+      const clean = s.item.replace(/<[^>]+>/g, '').trim();
+      bySection[s.section].push(clean);
     }
   });
 
@@ -631,7 +633,7 @@ function buildSummary() {
   if (surveyAnswers.fridge || surveyAnswers.price || surveyAnswers.printed) {
     out += `\n📋 *Survey answers:*`;
     if (surveyAnswers.fridge) out += `\n• Would stick on fridge: ${FRIDGE_LABELS[surveyAnswers.fridge]}`;
-    if (surveyAnswers.price) out += `\n• Willing to pay for PDF: ${surveyAnswers.price === '0' ? "Wouldn't pay" : '€' + surveyAnswers.price}`;
+    if (surveyAnswers.price) out += `\n• Willing to pay for PDF: ${surveyAnswers.price === '0' ? "Would not buy" : '€' + surveyAnswers.price}`;
     if (surveyAnswers.printed) out += `\n• Printed copy +€2: ${PRINTED_LABELS[surveyAnswers.printed]}`;
     out += `\n`;
   }
