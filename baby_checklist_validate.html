@@ -115,20 +115,39 @@
     border-bottom: 1px solid var(--border);
   }
   .item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    display: block;
     padding: 12px 14px;
     border-bottom: 1px solid #f4eee5;
-    gap: 10px;
     user-select: none;
   }
   .item:last-child { border-bottom: none; }
   .item:hover { background: #fbf7f1; }
   .item-label {
-    flex: 1;
     font-size: 14px;
     line-height: 1.35;
+  }
+  .item-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .meta-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: #f8efe7;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.25;
+  }
+  .meta-chip strong {
+    color: var(--accent);
+    margin-right: 4px;
+  }
+  .meta-chip.alt {
+    background: #eef5f1;
   }
   .category-title {
     padding: 12px 14px 6px;
@@ -510,6 +529,291 @@ const CHECKLIST = {
     ]
   }
 };
+
+const CATEGORY_GUIDANCE = [
+  { match: "Sleep", for: "Sleep setup and night routine" },
+  { match: "Breast & Bottle", for: "Breastfeeding, pumping, combo, or bottle-feeding parents" },
+  { match: "Solids", for: "Starting solids and family meals" },
+  { match: "Bath & Hygiene", for: "Bathing, skin care, and daily hygiene" },
+  { match: "Diapering", for: "Changing station and diaper care" },
+  { match: "Clothing", for: "Season, size changes, and daily outfits" },
+  { match: "Travel & Mobility", for: "Parents going out, using a car, stroller, or babywearing" },
+  { match: "Play & Development", for: "Floor time, sensory play, and motor development" },
+  { match: "Safety & Babyproofing", for: "Mobile babies and home safety" },
+  { match: "Mom Care", for: "Pregnancy, postpartum recovery, and feeding comfort" },
+  { match: "Local resources", for: "Berlin parents looking for secondhand and local support" }
+];
+
+const ITEM_GUIDANCE = [
+  ["Bedside co-sleeper", {
+    for: "Parents who want baby close at night",
+    alt: "A safe crib or cot can work if baby sleeps separately."
+  }],
+  ["Crib / cot", {
+    for: "Parents planning a separate baby sleep space",
+    alt: "Some families use a bedside co-sleeper first and buy the crib later."
+  }],
+  ["Crib mattress", {
+    for: "Anyone using a crib or cot",
+    alt: "Match the exact cot size; avoid old, sagging secondhand mattresses."
+  }],
+  ["Swaddles", {
+    for: "Newborns who settle better when wrapped",
+    alt: "Sleep sacks work better for babies who dislike swaddling."
+  }],
+  ["Baby nest", {
+    for: "Supervised contact naps and daytime lounging",
+    alt: "Not for unsupervised night sleep; a firm flat sleep surface is safer."
+  }],
+  ["Baby monitor", {
+    for: "Larger flats, separate room naps, or anxious first-time parents",
+    alt: "May be unnecessary in a small apartment at first."
+  }],
+  ["White noise machine", {
+    for: "Noisy homes or babies who settle with steady sound",
+    alt: "Try a phone app first before buying a device."
+  }],
+  ["Breast pump", {
+    for: "Pumping, supply building, returning to work, or occasional bottle feeds",
+    alt: "If exclusively breastfeeding is going smoothly, wait or rent first."
+  }],
+  ["Milk collectors", {
+    for: "Breastfeeding parents with letdown or leaking",
+    alt: "Skip if not leaking or not breastfeeding."
+  }],
+  ["Nipple shields", {
+    for: "Breastfeeding with latch pain, flat nipples, or lactation-consultant guidance",
+    alt: "Do not buy in advance for everyone; get feeding support first."
+  }],
+  ["Nursing pads", {
+    for: "Breastfeeding parents who leak milk",
+    alt: "Buy a small pack first; not everyone leaks."
+  }],
+  ["Nipple cream", {
+    for: "Breastfeeding discomfort in the early days",
+    alt: "May not be needed if latch is comfortable."
+  }],
+  ["Nursing pillow", {
+    for: "Breastfeeding, bottle-feeding support, and parent posture",
+    alt: "Regular firm pillows can work in the beginning."
+  }],
+  ["Bottles", {
+    for: "Formula, combo feeding, pumping, or partner feeds",
+    alt: "Exclusively breastfeeding parents can start with 1-2 bottles."
+  }],
+  ["Flange inserts", {
+    for: "Regular pumping parents",
+    alt: "Only buy after measuring nipple size or testing pump fit."
+  }],
+  ["Milk storage bags", {
+    for: "Freezing pumped milk",
+    alt: "Skip if pumping only occasionally."
+  }],
+  ["Steriliser", {
+    for: "Bottle-feeding, pumping parts, and frequent bottle use",
+    alt: "Boiling water or dishwasher routines may be enough for some families."
+  }],
+  ["Bottle warmer", {
+    for: "Bottle-fed babies or expressed milk at night",
+    alt: "Warm water in a bowl works if bottles are occasional."
+  }],
+  ["Wearable breast pump", {
+    for: "Regular pumping while moving around or returning to work",
+    alt: "A standard electric pump is usually enough for occasional pumping."
+  }],
+  ["High chair", {
+    for: "Solids from around 6 months",
+    alt: "Wait until baby is actually ready to sit and eat."
+  }],
+  ["Newborn high chair set", {
+    for: "Families using a Tripp Trapp from birth",
+    alt: "Not needed if baby is happy on a mat, bouncer, or in arms."
+  }],
+  ["Food warmer", {
+    for: "Parents batch-cooking purees or warm meals",
+    alt: "A small pot or microwave can do the same job."
+  }],
+  ["Baby bath tub", {
+    for: "Newborn bathing when the sink or adult tub feels awkward",
+    alt: "A clean sink or shared bath can work for some families."
+  }],
+  ["Almond oil", {
+    for: "Gentle skin cleaning, bath, or dry skin care",
+    alt: "Use only if baby tolerates it; plain water is enough for many baths."
+  }],
+  ["Baby lotion", {
+    for: "Dry skin if baby needs it",
+    alt: "Many newborns do not need daily lotion."
+  }],
+  ["Bath + body thermometer", {
+    for: "Checking bath water and fever",
+    alt: "A medical thermometer matters more than a bath gadget."
+  }],
+  ["Bath seat", {
+    for: "Older babies who are sitting and slippery in the tub",
+    alt: "Not for newborns; never replaces hands-on supervision."
+  }],
+  ["Changing mat", {
+    for: "Any regular changing spot",
+    alt: "A portable changing mat works if space is tight."
+  }],
+  ["Heat lamp", {
+    for: "Cold bathrooms, winter babies, or babies upset during changes",
+    alt: "Warm room and quick changes may be enough."
+  }],
+  ["Black tea + healing wool", {
+    for: "Sore diaper area, common German midwife tip",
+    alt: "Use with care and ask midwife/pediatrician for persistent rash."
+  }],
+  ["Cloth diaper kit", {
+    for: "Eco-minded parents or sensitive skin",
+    alt: "Disposable diapers are simpler for many newborn weeks."
+  }],
+  ["Diaper bin", {
+    for: "Small flats or parents wanting smell control",
+    alt: "A normal bin emptied often can work."
+  }],
+  ["Waterproof muslin", {
+    for: "Leaks, spit-up, night protection, and travel changing",
+    alt: "Any washable waterproof pad can do the job."
+  }],
+  ["Wet bags", {
+    for: "Cloth diapers, wet clothes, swim gear, or messy outings",
+    alt: "Zip bags work for occasional use."
+  }],
+  ["Changing table", {
+    for: "Dedicated nursery space and storage",
+    alt: "Use a foam topper on the washing machine, bed, or dresser."
+  }],
+  ["Body extender", {
+    for: "Making bodysuits last longer between sizes",
+    alt: "Skip if buying enough next-size clothes secondhand."
+  }],
+  ["Winter overall", {
+    for: "Winter babies and cold stroller walks",
+    alt: "Layering plus footmuff may be enough for mild weather."
+  }],
+  ["Rain suit", {
+    for: "Crawlers and walkers in wet Berlin weather",
+    alt: "Wait until baby is mobile outdoors."
+  }],
+  ["First walking shoes", {
+    for: "Outdoor walking babies",
+    alt: "Barefoot or socks are better before walking."
+  }],
+  ["Stroller / pram", {
+    for: "Daily walks, errands, and naps outside",
+    alt: "Babywearing can cover early months for some families."
+  }],
+  ["Travel buggy", {
+    for: "Flights, public transport, and later lightweight trips",
+    alt: "Wait until baby outgrows the main pram setup."
+  }],
+  ["Rain cover + sun shade", {
+    for: "Berlin weather and stroller naps",
+    alt: "Often included with stroller bundles; check before buying separately."
+  }],
+  ["Car seat", {
+    for: "Car owners, taxi use, hospital ride home, or car-share families",
+    alt: "If no car, borrow/rent for specific trips."
+  }],
+  ["Isofix base", {
+    for: "Families using a car seat often",
+    alt: "Seat-belt installation can work if compatible and correctly fitted."
+  }],
+  ["Baby carrier", {
+    for: "Hands-free outings, contact naps, stairs, and public transport",
+    alt: "Try or borrow before buying; fit differs by parent and baby."
+  }],
+  ["Baby wrap", {
+    for: "Newborn closeness and soft early carrying",
+    alt: "A structured carrier may feel easier for some parents."
+  }],
+  ["Stroller carry bag", {
+    for: "Flights or storing stroller during travel",
+    alt: "Only buy when travel is booked."
+  }],
+  ["Diaper bag", {
+    for: "Organized outings",
+    alt: "Any backpack with pouches can work."
+  }],
+  ["Play mat", {
+    for: "Tummy time and floor play",
+    alt: "A blanket plus a few toys works early on."
+  }],
+  ["Baby swing", {
+    for: "Babies who like motion and parents needing short hands-free moments",
+    alt: "Borrow first; some babies dislike it."
+  }],
+  ["Baby bouncer", {
+    for: "Short supervised breaks or bathroom/kitchen moments",
+    alt: "Not essential; floor mat or carrier may be enough."
+  }],
+  ["Learning tower", {
+    for: "Standing toddlers joining kitchen routines",
+    alt: "Usually later than the first year for many babies."
+  }],
+  ["Balance bike", {
+    for: "Early walkers and toddlers",
+    alt: "Often more relevant after 12 months."
+  }],
+  ["Toniebox", {
+    for: "Audio routines and screen-free stories",
+    alt: "Phone speaker or library audio works first."
+  }],
+  ["Ball pit", {
+    for: "Playroom space and active babies",
+    alt: "Definitely wait-and-see."
+  }],
+  ["Outlet covers", {
+    for: "Crawling babies and reachable sockets",
+    alt: "Start babyproofing before crawling, not necessarily before birth."
+  }],
+  ["Baby gates", {
+    for: "Stairs, kitchen zones, and mobile babies",
+    alt: "Wait until baby starts crawling unless stairs are already a concern."
+  }],
+  ["Shopping cart protector", {
+    for: "Parents using supermarket carts often",
+    alt: "A muslin cloth or wipes may be enough."
+  }],
+  ["Peri bottle", {
+    for: "Postpartum toilet comfort after vaginal birth",
+    alt: "Hospital may provide one; still useful at home."
+  }],
+  ["Lansinoh warm/cold breast compress", {
+    for: "Breastfeeding or pumping discomfort, engorgement, or clogged ducts",
+    alt: "Warm cloths and cold packs can work too."
+  }],
+  ["Tummy belt", {
+    for: "Parents wanting belly/back support postpartum",
+    alt: "Only buy if you personally like compression support."
+  }]
+];
+
+function getCategoryGuidance(category) {
+  return CATEGORY_GUIDANCE.find(rule => category.includes(rule.match)) || {
+    for: "Depends on your home, baby, and parenting style"
+  };
+}
+
+function getItemGuidance(item, category) {
+  const itemRule = ITEM_GUIDANCE.find(([match]) => item.includes(match));
+  const categoryRule = getCategoryGuidance(category);
+  return {
+    for: itemRule?.[1].for || categoryRule.for,
+    alt: itemRule?.[1].alt || ""
+  };
+}
+
+function escapeHtml(value) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
 const container = document.getElementById('checklist');
 
 Object.entries(CHECKLIST).forEach(([ageGroup, categories]) => {
@@ -525,9 +829,16 @@ Object.entries(CHECKLIST).forEach(([ageGroup, categories]) => {
     sec.appendChild(categoryTitle);
 
     items.forEach((item) => {
+      const guidance = getItemGuidance(item, category);
       const row = document.createElement('div');
       row.className = 'item';
-      row.innerHTML = `<span class="item-label">${item}</span>`;
+      row.innerHTML = `
+        <div class="item-label">${item}</div>
+        <div class="item-meta">
+          <span class="meta-chip"><strong>For:</strong>${escapeHtml(guidance.for)}</span>
+          ${guidance.alt ? `<span class="meta-chip alt"><strong>Alternative:</strong>${escapeHtml(guidance.alt)}</span>` : ""}
+        </div>
+      `;
       sec.appendChild(row);
     });
   });
